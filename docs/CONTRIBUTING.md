@@ -9,7 +9,7 @@ This document outlines the mandatory procedure for all code changes. To ensure p
 
 Every task must follow this progression on the Project Board. **Do not skip columns.**
 
-* **Todo**: Issues are either assigned to you or created by you.
+* **Todo**: Issues are either assigned to you or created by you (see creating an issue section below).
 * **In Progress**: Move your card here when you start coding on a Branch.
 * **Review (PR Opened)**: Move your card here once you open a Pull Request (PR).
 * **Testing/QA**: The Tester moves the card here to validate the filters/logic locally.
@@ -44,15 +44,24 @@ Keep history clean using the format: `[Action]: [Description]`
 
 ## 🚩 Creating a New Issue
 
-If you identify a new task or a bug, you must create an issue with a clear title and labels.
 
-**Proper Issue Example:**
+1. The Navigation Path
+Navigate to our Repository page on GitHub.
 
-* **Title**: `[Feature] Implement 1x1 Pixel Manipulation`
-* **Labels**: `feature`
-* **Description**:
-* [ ] Implement RGB iteration logic.
-* [ ] Ensure output saves to `/output` folder.
+Click the Issues tab (located between "Code" and "Pull requests").
+
+Click the green New Issue button.
+
+2. Filling the Metadata (The "Pro" Step)
+Before you hit "Submit," look at the right-hand sidebar. This is where the magic happens for your Roadmap:
+
+Assignees: Click "assign yourself" or select the teammate responsible.
+
+Labels: Choose the appropriate category (e.g., feature, documentation, bug).
+
+Projects: Select your Project Board. This puts the issue on your Kanban Board.
+
+Milestone: Select the Active Milestone (e.g., Milestone 1: Setup). This is what puts the issue on your Visual Roadmap.
 
 
 
