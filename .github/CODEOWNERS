@@ -1,4 +1,18 @@
-* @RalphLesterQReyes 
+# -----------------------------------------------------------------------------
+# PROJECT GATEKEEPER POLICY
+# -----------------------------------------------------------------------------
 
-# This rule explicitly and automatically assigns @ralphlester as the
-# mandatory reviewer and tester for ALL file changes committed to the main branch.
+# GLOBAL OWNER
+# Ralph is the primary Tester and Gatekeeper for all code and logic changes.
+* @ralphlester
+
+# INFRASTRUCTURE & DEVOPS OWNERSHIP
+# @RichterVhon owns the automation, environment, and standards.
+# Any changes to these paths REQUIRE your approval.
+
+.github/             @RichterVhon
+/docker/             @RichterVhon
+Dockerfile           @RichterVhon
+.dockerignore        @RichterVhon
+/docs/templates/     @RichterVhon
+requirements.txt     @RichterVhon
