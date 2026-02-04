@@ -14,5 +14,5 @@
 /docker/             @RichterVhon
 Dockerfile           @RichterVhon
 .dockerignore        @RichterVhon
-/docs/templates/     @RichterVhon
+/docs                @RichterVhon
 requirements.txt     @RichterVhon
