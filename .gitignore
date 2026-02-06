@@ -1,3 +1,10 @@
+# Project specific
+input/*
+output/*
+# Keep the folders but ignore the images
+!input/.gitkeep
+!output/.gitkeep
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
