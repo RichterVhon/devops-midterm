@@ -82,3 +82,11 @@ jobs:
         tags: ghcr.io/richtervhon/devops-midterm:latest
         build-args: |
           SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+
+    - name: Link Report in PR
+      uses: mshick/add-pr-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        message: |
+          📊 **Quality Test Report is ready!**
+          You can download it from the [Actions Artifacts list here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
