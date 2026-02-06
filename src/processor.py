@@ -15,17 +15,20 @@ def process_images(input_dir='input', output_dir='output'):
         if filename.lower().endswith(valid_extensions):
             # Construct full file paths
             input_path = os.path.join(input_dir, filename)
-            output_path = os.path.join(output_dir, filename)
+            
+            # FIXED: Added 'processed_' prefix to the output filename
+            output_filename = f"processed_{filename}"
+            output_path = os.path.join(output_dir, output_filename)
 
             # 4. Load the image
             img = cv2.imread(input_path)
 
             if img is not None:
-                # This is where your "fancy filters" will eventually go!
+                # Milestone 2 Hook: This is where we will call edges.extract_edges()
                 
                 # 5. Save the image to the output folder
                 cv2.imwrite(output_path, img)
-                print(f"Processed: {filename}")
+                print(f"Processed: {filename} -> {output_filename}")
             else:
                 print(f"Warning: Could not read {filename}. Skipping.")
 
