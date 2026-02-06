@@ -37,9 +37,9 @@ def process_images():
             final_cartoon = cv2.bitwise_and(color_version, color_version, mask=edges)
 
             # Save the final masterpiece
-            output_path = os.path.join(output_dir, f"vector_{filename}")
+            output_path = os.path.join(output_dir, f"processed_{filename}")
             cv2.imwrite(output_path, final_cartoon)
-            print(f"Masterpiece Created: vector_{filename}")
+            print(f"Masterpiece Created: processed_{filename}")
 
 if __name__ == "__main__":
     process_images()
