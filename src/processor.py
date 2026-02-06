@@ -1,7 +1,19 @@
 import cv2
 import os
+import sys
+
+# This ensures Python can find the 'filters' folder inside 'src'
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from filters.edges import extract_edges
 
 def process_images(input_dir='input', output_dir='output'):
+     # Use absolute paths to avoid confusion
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    input_dir = os.path.join(script_dir, '..', 'input')
+    output_dir = os.path.join(script_dir, '..', 'output')
+
+
     # 1. Ensure the output directory exists
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -24,10 +36,10 @@ def process_images(input_dir='input', output_dir='output'):
             img = cv2.imread(input_path)
 
             if img is not None:
-                # Milestone 2 Hook: This is where we will call edges.extract_edges()
+                processed_img = extract_edges(img)
                 
                 # 5. Save the image to the output folder
-                cv2.imwrite(output_path, img)
+                cv2.imwrite(output_path, processed_img)
                 print(f"Processed: {filename} -> {output_filename}")
             else:
                 print(f"Warning: Could not read {filename}. Skipping.")
