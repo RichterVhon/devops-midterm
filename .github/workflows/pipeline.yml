@@ -8,6 +8,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      pull-requests: write  # <--- THIS IS MISSING
       
     steps:
     - name: Checkout Code
@@ -85,8 +86,15 @@ jobs:
 
     - name: Link Report in PR
       uses: mshick/add-pr-comment@v2
-      if: github.event_name == 'pull_request'
+      if: always() && github.event_name == 'pull_request' # Runs even if tests fail
       with:
         message: |
+          ## 🧪 Milestone 4 Quality Report
+          
           📊 **Quality Test Report is ready!**
-          You can download it from the [Actions Artifacts list here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          To view the results:
+          1. Click the link below.
+          2. Scroll to the **Artifacts** section at the bottom.
+          3. Download `quality-report-run-${{ github.run_number }}`.
+
+          🔗 [View Actions Run & Artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
