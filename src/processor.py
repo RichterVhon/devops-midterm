@@ -11,20 +11,25 @@ if current_dir not in sys.path:
 from filters.edges import extract_edges
 from filters.colors import apply_paint_effect
 
-import sentry_sdk
 import os
+import sentry_sdk
 
-# The Handshake: Use the key provided by the YML
-sentry_dsn = os.getenv("SENTRY_DSN")
+# Determine where we are running
+if os.getenv("GITHUB_ACTIONS"):
+    env = "ci"
+elif os.getenv("APP_ENV") == "production":
+    env = "production"
+else:
+    env = "local"
 
-if sentry_dsn:
+# Only "Turn on" Sentry for CI and Production
+if env in ["ci", "production"] and os.getenv("SENTRY_DSN"):
     sentry_sdk.init(
-        dsn=sentry_dsn,
-        traces_sample_rate=1.0,
-        # Only log if it's NOT a local test (optional logic)
-        environment="production" if os.getenv("APP_ENV") == "production" else "development"
+        dsn=os.getenv("SENTRY_DSN"),
+        environment=env,  # This tags the error so you can filter the dashboard
+        traces_sample_rate=1.0
     )
-    
+
 def process_images():
     # Define paths relative to this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
