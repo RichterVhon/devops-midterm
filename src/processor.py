@@ -11,6 +11,20 @@ if current_dir not in sys.path:
 from filters.edges import extract_edges
 from filters.colors import apply_paint_effect
 
+import sentry_sdk
+import os
+
+# The Handshake: Use the key provided by the YML
+sentry_dsn = os.getenv("SENTRY_DSN")
+
+if sentry_dsn:
+    sentry_sdk.init(
+        dsn=sentry_dsn,
+        traces_sample_rate=1.0,
+        # Only log if it's NOT a local test (optional logic)
+        environment="production" if os.getenv("APP_ENV") == "production" else "development"
+    )
+    
 def process_images():
     # Define paths relative to this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
