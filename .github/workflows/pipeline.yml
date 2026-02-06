@@ -39,10 +39,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and Test inside Docker
-        # We run the tests during the build to ensure only working images get pushed
+        # Changed the name to match the repo 'devops-midterm' to fix the permission error
         run: |
-          docker build -t ghcr.io/richtervhon/testelective4mt:latest .
-          docker run --name test-container ghcr.io/richtervhon/testelective4mt:latest pytest --html=report.html --self-contained-html
+          docker build -t ghcr.io/richtervhon/devops-midterm:latest .
+          docker run --name test-container ghcr.io/richtervhon/devops-midterm:latest pytest --html=report.html --self-contained-html
           docker cp test-container:/app/report.html .
 
       - name: Save Automated Logs
@@ -53,4 +53,4 @@ jobs:
 
       - name: Push Docker Image
         if: github.ref == 'refs/heads/main' # Only push the image to the registry if on main
-        run: docker push ghcr.io/richtervhon/testelective4mt:latest
+        run: docker push ghcr.io/richtervhon/devops-midterm:latest
