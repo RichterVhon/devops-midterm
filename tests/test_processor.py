@@ -3,7 +3,7 @@ import shutil
 import cv2
 import numpy as np
 import pytest
-from src.processor import run_processor
+from src.processor import process_images as run_processor
 
 # The "Generic 3" assets you declared
 TEST_IMAGES = ["test1.jpg", "test2.jpg", "test3.jpg"]
