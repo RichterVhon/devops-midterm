@@ -31,7 +31,15 @@ if env in ["ci", "production"] and os.getenv("SENTRY_DSN"):
     )
 
 def process_images():
-    division_by_zero = 1 / 0  # This will trigger an error to test Sentry integration
+    try:
+    division_by_zero = 1 / 0
+except Exception as e:
+    # This manually sends the error to Sentry
+    sentry_sdk.capture_exception(e)
+    # This forces the script to wait until the data is actually sent
+    sentry_sdk.flush(timeout=2.0) 
+    print("Error sent to Sentry. Closing script.")
+    raise # Still allow the script to fail so your YML sees the red X
     # Define paths relative to this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
     input_dir = os.path.join(script_dir, '..', 'input')
