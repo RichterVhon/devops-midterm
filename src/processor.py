@@ -37,7 +37,10 @@ def process_images():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     input_dir = os.path.join(script_dir, '..', 'input')
     output_dir = os.path.join(script_dir, '..', 'output')
-
+    os.makedirs(output_dir, exist_ok=True)
+    mask_debug_dir = os.path.join(output_dir, ".debug_masks")
+    os.makedirs(mask_debug_dir, exist_ok=True)
+    
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -54,21 +57,29 @@ def process_images():
             img = cv2.imread(input_path)
 
             if img is not None:
-                # --- THE LOGIC SANDWICH ---
-                
-                # [x] 1. Generate the Ink Mask (Milestone 2)
+
+                # 1. Edge mask
                 ink_mask = extract_edges(img)
 
-                # [x] 2. Generate the Quantized/Smoothed Color Image (Milestone 3)
+                base_name, _ = os.path.splitext(filename)
+
+                # REQUIRED by tests (do NOT remove)
+                mask_path = os.path.join(mask_debug_dir, f"mask_{base_name}.png")
+                cv2.imwrite(mask_path, ink_mask)
+
+                # 2. Paint effect
                 painted_canvas = apply_paint_effect(img, k=8)
 
-                # [x] 3. Use cv2.bitwise_and to overlay ink lines
-                # This keeps the colors from 'painted_canvas' ONLY where 'ink_mask' is white.
+                # 3. Combine
                 final_cartoon = cv2.bitwise_and(painted_canvas, painted_canvas, mask=ink_mask)
 
-                # 4. Save the result
+                # 4. Final output (the one you actually care about)
+                output_filename = f"processed_{base_name}.png"
+                output_path = os.path.join(output_dir, output_filename)
                 cv2.imwrite(output_path, final_cartoon)
-                print(f"Image Processed: {output_filename}")
+
+                print(f"Processed: {filename} -> {output_filename}")
+
             else:
                 print(f"Warning: Could not read {filename}. Skipping.")
 
