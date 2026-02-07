@@ -14,21 +14,22 @@ from filters.colors import apply_paint_effect
 import os
 import sentry_sdk
 
-# Determine where we are running
-if os.getenv("GITHUB_ACTIONS"):
-    env = "ci"
-elif os.getenv("APP_ENV") == "production":
-    env = "production"
-else:
-    env = "local"
+# 1. Capture the environment variable from the system
+# We default to 'local' so your dashboard stays clean if you run it on your PC
+current_env = os.getenv("APP_ENV", "local")
 
-# Only "Turn on" Sentry for CI and Production
-if env in ["ci", "production"] and os.getenv("SENTRY_DSN"):
+# 2. Initialize Sentry
+# We remove the 'if' guard for the environment so we can actually see 
+# the 'local' or 'ci' tags show up on the dashboard for testing.
+if os.getenv("SENTRY_DSN"):
     sentry_sdk.init(
         dsn=os.getenv("SENTRY_DSN"),
-        environment=env,  # This tags the error so you can filter the dashboard
-        traces_sample_rate=1.0
+        environment=current_env, # This is what creates the dropdown in Sentry
+        release=os.getenv("GITHUB_SHA", "v1.0.0"), # Best practice for Milestone 4
+        traces_sample_rate=1.0,
+        send_default_pii=True
     )
+    print(f"Sentry initialized in [{current_env}] mode.")
 
 def process_images():
     #division_by_zero = 1 / 0  # This will trigger an error to test Sentry integration

@@ -50,15 +50,21 @@ jobs:
     - name: Build and Test inside Docker
       env:
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        RELEASE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       run: |
         # 1. Build the image
         docker build -t ghcr.io/richtervhon/devops-midterm:latest --build-arg SENTRY_DSN=$SENTRY_DSN .
         
-        # 2. RUN PYTEST INSIDE THE CONTAINER (This was missing/misplaced)
-        # We run the processor and pytest then extract the report
-        docker run --name test-container -e SENTRY_DSN=$SENTRY_DSN -e APP_ENV=production ghcr.io/richtervhon/devops-midterm:latest sh -c "python src/processor.py && pytest --html=report.html --self-contained-html"
+        # 2. RUN PROCESSOR AND PYTEST
+        # Added GITHUB_SHA so Sentry knows which version is running
+        docker run --name test-container \
+          -e SENTRY_DSN=$SENTRY_DSN \
+          -e APP_ENV=production \
+          -e GITHUB_SHA=$RELEASE_SHA \
+          ghcr.io/richtervhon/devops-midterm:latest \
+          sh -c "python src/processor.py && pytest --html=report.html --self-contained-html"
         
-        # 3. Copy the report out so GitHub can see it
+        # 3. Copy the report out
         docker cp test-container:/app/report.html .
 
     - name: Run Trivy Vulnerability Scanner
