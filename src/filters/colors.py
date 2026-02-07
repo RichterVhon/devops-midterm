@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def apply_paint_effect(image, k=8):
+def apply_paint_effect(image, k=8, return_quantized=False):
     """
     Simplifies the image colors using K-Means and smooths it 
     with a Bilateral Filter for a 'painted' look.
@@ -24,4 +24,7 @@ def apply_paint_effect(image, k=8):
     # d=9, sigmaColor=75, sigmaSpace=75 are standard for 'cartoon' smoothing
     painted = cv2.bilateralFilter(quantized, 9, 75, 75)
     
+    if return_quantized:
+        return quantized
+
     return painted
