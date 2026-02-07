@@ -32,7 +32,7 @@ if os.getenv("SENTRY_DSN"):
     print(f"Sentry initialized in [{current_env}] mode.")
 
 def process_images():
-    division_by_zero = 1 / 0  # This will trigger an error to test Sentry integration
+    #division_by_zero = 1 / 0  # This will trigger an error to test Sentry integration
     # Define paths relative to this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
     input_dir = os.path.join(script_dir, '..', 'input')
