@@ -55,7 +55,7 @@ jobs:
         docker build -t ghcr.io/richtervhon/devops-midterm:latest --build-arg SENTRY_DSN=$SENTRY_DSN .
         
         # 2. RUN PROCESSOR AND PYTEST
-        # Added GITHUB_SHA so Sentry knows which version of the heater is running
+        # Added GITHUB_SHA so Sentry knows which version is running
         docker run --name test-container \
           -e SENTRY_DSN=$SENTRY_DSN \
           -e APP_ENV=production \
