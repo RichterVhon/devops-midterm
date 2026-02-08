@@ -1,6 +1,7 @@
 # [DevOps Midterm - Image Sketcher/Cartoonizer]
 
 > Automated Image Processing using DevOps CI Pipeline
+
 > **Requirements:** Python 3 | OpenCV | GitHub & GitHub Actions | PyTest
 
 ## 📝 Project Overview (**vhon, done**)
@@ -55,8 +56,6 @@ docker run -v "%cd%":/app/data [image-name]
 ---
 
 ## 🛠 Technical Architecture & Logic
-
----
 
 ### ⚙️ DevOps & Observability Workflow (**vhon, done**)
 **Lead Architect:** vhon | **Configuration Path:** [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml)
@@ -119,8 +118,6 @@ A modular hierarchy designed for scalability, clear separation of concerns, and 
 
 ---
 
----
-
 ## 📸 Visual Gallery & File Proof (**saige**; upload only screenshots to docs/screenshots. compilation and formatting here in readme will be done by **kier**)
 
 > **Documenter Source:** *Tester's PR screenshots.*
@@ -132,7 +129,8 @@ A modular hierarchy designed for scalability, clear separation of concerns, and 
 
 ### File System Proof
 
-* **Directory Verification**: `![Folder_Structure](./screenshots/folder_structure.png)`
+* **Directory Verification**: 
+`![Folder_Structure](./docs/screenshots/folder_structure.png)`
 *(Note: Includes screenshots proving the automatic creation of files inside the `/output` folder).*
 
 ---
@@ -216,11 +214,11 @@ We implemented advanced **Industry Workflows** to maintain high velocity without
 
 The project is structured into four specialized domains to ensure parallel development, modularity, and rigorous quality control. Each member owns a specific sector of the repository and the project board.
 
-| Role | Responsibility | Primary Deliverables | Key Tools |
-| :--- | :--- | :--- | :--- |
-| **Lead Developer** | Algorithm Design & Core Logic | `src/filters/`, `src/processor.py` | OpenCV, NumPy |
-| **Tester** | Validation & Quality Assurance | `tests/`, Bug Reports, PR Approval | Pytest, Manual Logs |
-| **DevOps** | Infrastructure & Automation | `pipeline.yml`, `Dockerfile`, `CONTRIBUTING.md`, GHCR | GitHub Actions, Sentry, Docker, Trivy  |
-| **Documenter** | Traceability & Knowledge Base | `README.md` | Markdown, Project Boards |
+| Role | Name | GitHub | Responsibility | Primary Deliverables | Key Tools |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Lead Developer** | Carlo, John Franco | [@jugs301](https://github.com/jugs301) | Algorithm Design & Core Logic | `src/filters/`, `src/processor.py` | OpenCV, NumPy |
+| **Tester** | Reyes, Ralph Lester | @[RalphLesterQReyes](https://github.com/RalphLesterQReyes) | Validation & Quality Assurance | `tests/`, Bug Reports, PR Approval | Pytest, Manual Logs |
+| **DevOps** | Dela Cruz, Richter Vhon C. | [@RichterVhon](https://github.com/RichterVhon) | Infrastructure & Automation | `pipeline.yml`, `Dockerfile`, `CONTRIBUTING.md` | GH Actions, Sentry, Docker, Trivy |
+| **Documenter** | Leonardo, Kier Paolo | [@xelarkkk]https://github.com/xelarkkk | Traceability & Knowledge Base | `README.md`, Visual Gallery | Markdown, Project Boards |
 
 ---
