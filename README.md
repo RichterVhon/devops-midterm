@@ -85,8 +85,6 @@ The core engine utilizes **OpenCV (cv2)** following this logic:
 
 ### 🧪 Quality Assurance (Automated Testing) (**Saige**; include file path and specific files, katulad nung ginawa ko sa devops & observability workflow)
 
-> **Documenter Source:** *PyTest terminal logs and Actions history.*
-
 The system ensures reliability through **PyTest**. Automated tests verify:
 
 * **Detection**: Correct identification of image files in the input folder.
@@ -130,8 +128,43 @@ A modular hierarchy designed for scalability, clear separation of concerns, and 
 ### File System Proof
 
 * **Directory Verification**: 
-`![Folder_Structure](./docs/screenshots/folder_structure.png)`
+![Folder_Structure](./docs/screenshots/folder_structure.png)
+
 *(Note: Includes screenshots proving the automatic creation of files inside the `/output` folder).*
+
+---
+
+## 🤖 Automation & Workflow Verification (vhon, done)
+
+This section provides visual evidence of the **Gatekeeper Protocol** in action, ensuring every Pull Request meets our rigorous standards for security, logic, and documentation.
+
+### 1. Project Management & Traceability
+
+#### A. Development Roadmap (Timeline)
+![Project_Roadmap](./docs/screenshots/project_roadmap.png)
+> **Strategic Alignment**: A high-level view of our development phases, tracking the transition from Project Scaffolding to Core logic and eventual SSR heater integration.
+
+#### B. GitHub Project Board (Kanban)
+![Project_Board](./docs/screenshots/project_board.png)
+> **No Issue, No Work**: Proof of our live task flow. Every active feature is represented by an Issue, ensuring no "shadow code" enters the repository.
+
+#### C. Sprint Table (Metadata View)
+![Project_Table](./docs/screenshots/project_table.png)
+> **Accountability Matrix**: A data-driven view showing task owners (Lead Dev, DevOps, etc.), priority levels, and linked Pull Requests for every milestone.
+
+---
+
+### 2. CI/CD Pipeline (GitHub Actions)
+![Pipeline_Verification](./docs/screenshots/pipeline_success.png)
+> **Proof of Quality**: Evidence of the `pipeline.yml` successfully executing Flake8 linting, Pytest suites, and Trivy security scans before allowing a merge.
+
+### 3. Automated PR Feedback (Gitbot & SEER)
+![PR_Bot_Comments](./docs/screenshots/pr_bots.png)
+> **Interactive Governance**: Automated feedback from SEER for code analysis and Gitbot for HTML/Documentation previews, ensuring consistency across all contributors.
+
+### 4. Real-time Monitoring (Sentry)
+![Sentry_Dashboard](./docs/screenshots/sentry_verification.png)
+> **Error Traceability**: Verification of Sentry integration, capturing and logging runtime exceptions during the "Hot-Folder" processing cycle.
 
 ---
 
@@ -217,8 +250,8 @@ The project is structured into four specialized domains to ensure parallel devel
 | Role | Name | GitHub | Responsibility | Primary Deliverables | Key Tools |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Lead Developer** | Carlo, John Franco | [@jugs301](https://github.com/jugs301) | Algorithm Design & Core Logic | `src/filters/`, `src/processor.py` | OpenCV, NumPy |
-| **Tester** | Reyes, Ralph Lester | @[RalphLesterQReyes](https://github.com/RalphLesterQReyes) | Validation & Quality Assurance | `tests/`, Bug Reports, PR Approval | Pytest, Manual Logs |
+| **Tester** | Reyes, Ralph Lester | [@RalphLesterQReyes](https://github.com/RalphLesterQReyes) | Validation & Quality Assurance | `tests/`, Bug Reports, PR Approval | Pytest, Manual Logs |
 | **DevOps** | Dela Cruz, Richter Vhon C. | [@RichterVhon](https://github.com/RichterVhon) | Infrastructure & Automation | `pipeline.yml`, `Dockerfile`, `CONTRIBUTING.md` | GH Actions, Sentry, Docker, Trivy |
-| **Documenter** | Leonardo, Kier Paolo | [@xelarkkk]https://github.com/xelarkkk | Traceability & Knowledge Base | `README.md`, Visual Gallery | Markdown, Project Boards |
+| **Documenter** | Leonardo, Kier Paolo | [@xelarkkk](https://github.com/xelarkkk) | Traceability & Knowledge Base | `README.md`, Visual Gallery | Markdown, Project Boards |
 
 ---
