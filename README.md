@@ -159,6 +159,7 @@ This section provides visual evidence of the **Gatekeeper Protocol** in action, 
 
 ### 3. Automated PR Feedback (Gitbot & SEER)
 ![PR_Bot_Comments](./docs/screenshots/pr_bots.png)
+![HTML_log](./docs/screenshots/html_log.png)
 > **Interactive Governance**: Automated feedback from SEER for code analysis and Gitbot for HTML/Documentation previews, ensuring consistency across all contributors.
 
 ### 4. Real-time Monitoring (Sentry)
