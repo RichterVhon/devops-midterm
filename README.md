@@ -127,10 +127,9 @@ A modular hierarchy designed for scalability, clear separation of concerns, and 
 
 ### File System Proof
 
-* **Directory Verification**: 
 ![Folder_Structure](./docs/screenshots/folder_structure.png)
 
-*(Note: Includes screenshots proving the automatic creation of files inside the `/output` folder).*
+> **No Issue, No Work**: Proof of our live task flow. Every active feature is represented by an Issue, ensuring no "shadow code" enters the repository.
 
 ---
 
@@ -142,7 +141,7 @@ This section provides visual evidence of the **Gatekeeper Protocol** in action, 
 
 #### A. Development Roadmap (Timeline)
 ![Project_Roadmap](./docs/screenshots/project_roadmap.png)
-> **Strategic Alignment**: A high-level view of our development phases, tracking the transition from Project Scaffolding to Core logic and eventual SSR heater integration.
+> **Strategic Alignment**: A high-level view of our development phases, tracking the transition from Project Scaffolding to Core logic and integration.
 
 #### B. GitHub Project Board (Kanban)
 ![Project_Board](./docs/screenshots/project_board.png)
@@ -221,7 +220,7 @@ We implemented advanced **Industry Workflows** to maintain high velocity without
 | Milestone 1: Setup & Architecture (The Foundation) 	| [DevOps] Establish Project Contribution Guidelines and Workflow 	| https://github.com/RichterVhon/devops-midterm/issues/6 	| RichterVhon 	| Done 	| https://github.com/RichterVhon/devops-midterm/pull/7 	| Feb 4, 2026 	| Feb 4, 2026 	|
 | Milestone 1: Setup & Architecture (The Foundation) 	| [DevOps] Environment Containerization 	| https://github.com/RichterVhon/devops-midterm/issues/3 	| RichterVhon 	| Review (PR Opened) 	| https://github.com/RichterVhon/devops-midterm/pull/23 	| Feb 3, 2026 	| Feb 3, 2026 	|
 | Milestone 1: Setup & Architecture (The Foundation) 	| setup repo folder structure 	| https://github.com/RichterVhon/devops-midterm/issues/1 	| RichterVhon 	| Done 	|  	| Feb 3, 2026 	| Feb 3, 2026 	|
-| Milestone 1: Setup & Architecture (The Foundation) 	| [Docs] Technical Setup & Contribution Guide 	| https://github.com/RichterVhon/devops-midterm/issues/5 	| xelarkkk 	| Todo 	|  	|  	|  	|
+| Milestone 1: Setup & Architecture (The Foundation) 	| [Docs] Centralized Documentation Hub & README Evolution 	| https://github.com/RichterVhon/devops-midterm/issues/5 	| jugs301, RalphLesterQReyes, RichterVhon, xelarkkk 	| Todo 	|  	|  	|  	|
 | Milestone 1: Setup & Architecture (The Foundation) 	| Contributing markdown file 	| https://github.com/RichterVhon/devops-midterm/pull/7 	| RichterVhon 	| Done 	|  	| Feb 4, 2026 	| Feb 4, 2026 	|
 | Milestone 1: Setup & Architecture (The Foundation) 	| Docu: Added readme template for documenter guide 	| https://github.com/RichterVhon/devops-midterm/pull/10 	| RichterVhon 	| Done 	|  	| Feb 4, 2026 	| Feb 4, 2026 	|
 | Milestone 1: Setup & Architecture (The Foundation) 	| RoleAssign: automatically assign ralphlester as reviewer and merger f… 	| https://github.com/RichterVhon/devops-midterm/pull/11 	| RichterVhon 	| Done 	|  	| Feb 4, 2026 	| Feb 4, 2026 	|
@@ -232,14 +231,10 @@ We implemented advanced **Industry Workflows** to maintain high velocity without
 | Milestone 3: Feature - The Paint (Color & Smoothing) 	| [Dev] Create Color Quantization Module 	| https://github.com/RichterVhon/devops-midterm/issues/25 	| jugs301 	| Done 	| https://github.com/RichterVhon/devops-midterm/pull/28 	| Feb 6, 2026 	| Feb 6, 2026 	|
 | Milestone 3: Feature - The Paint (Color & Smoothing) 	| [Test] Verify Color Count Reduction 	| https://github.com/RichterVhon/devops-midterm/issues/26 	| RalphLesterQReyes 	| Review (PR Opened) 	| https://github.com/RichterVhon/devops-midterm/pull/46 	|  	|  	|
 | Milestone 3: Feature - The Paint (Color & Smoothing) 	| [Devops]  Add process to pipeline 	| https://github.com/RichterVhon/devops-midterm/issues/29 	| RichterVhon 	| Done 	| https://github.com/RichterVhon/devops-midterm/pull/30 	| Feb 6, 2026 	| Feb 6, 2026 	|
-| Milestone 3: Feature - The Paint (Color & Smoothing) 	| [Docs] Color Quantization Visual Results 	| https://github.com/RichterVhon/devops-midterm/issues/27 	| xelarkkk 	| Todo 	|  	|  	|  	|
-| Milestone 3: Feature - The Paint (Color & Smoothing) 	| [Docs] Milestone 3: Color Quantization & Paint Smoothing 	| https://github.com/RichterVhon/devops-midterm/issues/43 	| xelarkkk 	| Todo 	|  	|  	|  	|
-| Milestone 4: Feature - The Fusion (Final Integration) 	| [Test] Full System Integration Validation 	| https://github.com/RichterVhon/devops-midterm/issues/42 	| RalphLesterQReyes 	| In Progress 	|  	|  	|  	|
+| Milestone 4: Feature - The Fusion (Final Integration) 	| [Test] Full System Integration Validation 	| https://github.com/RichterVhon/devops-midterm/issues/42 	| RalphLesterQReyes 	| Done 	|  	|  	|  	|
 | Milestone 4: Feature - The Fusion (Final Integration) 	| [Dev] Orchestrate the Final Pipeline 	| https://github.com/RichterVhon/devops-midterm/issues/31 	| jugs301 	| Done 	| https://github.com/RichterVhon/devops-midterm/pull/33 	| Feb 6, 2026 	| Feb 6, 2026 	|
 | Milestone 4: Feature - The Fusion (Final Integration) 	| [DevOps] Set-up Sentry 	| https://github.com/RichterVhon/devops-midterm/issues/35 	| RichterVhon 	| Done 	| https://github.com/RichterVhon/devops-midterm/pull/36, https://github.com/RichterVhon/devops-midterm/pull/37, https://github.com/RichterVhon/devops-midterm/pull/39, https://github.com/RichterVhon/devops-midterm/pull/41 	| Feb 6, 2026 	| Feb 6, 2026 	|
 | Milestone 4: Feature - The Fusion (Final Integration) 	| [Devops] Add environment for sentry logs filtering 	| https://github.com/RichterVhon/devops-midterm/issues/40 	| RichterVhon 	| Done 	| https://github.com/RichterVhon/devops-midterm/pull/36, https://github.com/RichterVhon/devops-midterm/pull/37, https://github.com/RichterVhon/devops-midterm/pull/41 	| Feb 7, 2026 	| Feb 7, 2026 	|
-| Milestone 4: Feature - The Fusion (Final Integration) 	| [Docs] Milestone 4: Final Integration & Traceability Matrix 	| https://github.com/RichterVhon/devops-midterm/issues/44 	| xelarkkk 	| Todo 	|  	|  	|  	|
-
 ---
 
 ## 👥 The Team
