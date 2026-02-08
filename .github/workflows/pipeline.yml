@@ -55,17 +55,30 @@ jobs:
         # 1. Build the image
         docker build -t ghcr.io/richtervhon/devops-midterm:latest --build-arg SENTRY_DSN=$SENTRY_DSN .
         
-        # 2. RUN PROCESSOR AND PYTEST
-        # Added GITHUB_SHA so Sentry knows which version is running
-        docker run --name test-container \
+        # 2. START THE WATCHER SERVICE (Modified to -d)
+        # We run in detached mode so the pipeline can move to the next command
+        docker run -d --name test-container \
           -e SENTRY_DSN=$SENTRY_DSN \
           -e APP_ENV=production \
           -e GITHUB_SHA=$RELEASE_SHA \
-          ghcr.io/richtervhon/devops-midterm:latest \
-          sh -c "python src/processor.py && pytest --html=report.html --self-contained-html"
+          ghcr.io/richtervhon/devops-midterm:latest
         
-        # 3. Copy the report out
+        # 3. VERIFICATION & TEST EXECUTION
+        # Wait for service to initialize
+        sleep 5
+        
+        # Check if the "Verbose Logging" you requested is actually working
+        docker logs test-container | grep "Watcher Service Started"
+        
+        # Run the processor and pytest inside the ALREADY running container
+        docker exec test-container sh -c "python src/processor.py && pytest --html=report.html --self-contained-html"
+        
+        # 4. EXPORT RESULTS & CLEANUP
+        # Copy the report out before killing the container
         docker cp test-container:/app/report.html .
+        
+        # Stop the container (This tests your SIGTERM signal handling)
+        docker stop test-container
 
     - name: Run Trivy Vulnerability Scanner
       uses: aquasecurity/trivy-action@master
