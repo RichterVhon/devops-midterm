@@ -31,15 +31,19 @@ if os.getenv("SENTRY_DSN"):
     )
     print(f"Sentry initialized in [{current_env}] mode.")
 
-def process_images():
+def process_images(input_dir=None, output_dir=None): 
     #division_by_zero = 1 / 0  # This will trigger an error to test Sentry integration
     # Define paths relative to this script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    input_dir = os.path.join(script_dir, '..', 'input')
-    output_dir = os.path.join(script_dir, '..', 'output')
+# Define default folders if none are provided
+    if input_dir is None or output_dir is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        input_dir = os.path.join(script_dir, '..', 'input')
+        output_dir = os.path.join(script_dir, '..', 'output')
+
     os.makedirs(output_dir, exist_ok=True)
     mask_debug_dir = os.path.join(output_dir, ".debug_masks")
     os.makedirs(mask_debug_dir, exist_ok=True)
+
     
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -61,7 +65,7 @@ def process_images():
                 # 1. Edge mask
                 ink_mask = extract_edges(img)
 
-                base_name, _ = os.path.splitext(filename)
+                base_name, ext = os.path.splitext(filename)
 
                 # REQUIRED by tests (do NOT remove)
                 mask_path = os.path.join(mask_debug_dir, f"mask_{base_name}.png")
@@ -74,7 +78,7 @@ def process_images():
                 final_cartoon = cv2.bitwise_and(painted_canvas, painted_canvas, mask=ink_mask)
 
                 # 4. Final output (the one you actually care about)
-                output_filename = f"processed_{base_name}.png"
+                output_filename = f"processed_{base_name}{ext}"
                 output_path = os.path.join(output_dir, output_filename)
                 cv2.imwrite(output_path, final_cartoon)
 
