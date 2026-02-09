@@ -48,7 +48,7 @@ if __name__ == "__main__":
     observer.schedule(event_handler, input_dir, recursive=False)
     observer.start()
 
-    print("👀 Watching input folder for images...")
+    print("🚀 Watcher Service Started. Waiting...")
 
     try:
         while True:

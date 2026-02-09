@@ -66,6 +66,11 @@ jobs:
         # 3. VERIFICATION & TEST EXECUTION
         # Wait for service to initialize
         sleep 5
+
+        # NEW: Print the logs directly so you can see the error in GitHub Actions
+        echo "--- RAW CONTAINER LOGS ---"
+        docker logs test-container
+        echo "--- END LOGS ---"
         
         # Check if the "Verbose Logging" you requested is actually working
         docker logs test-container | grep "Watcher Service Started"
