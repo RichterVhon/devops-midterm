@@ -1,28 +1,59 @@
-# this is a simple watcher script that can be used to keep a container running and handle graceful shutdowns
-# you can fully replace the contents of this file with your own code, but make sure to keep the graceful shutdown logic if you want to handle signals properly
-
-import signal
-import sys
+import os
 import time
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+from processor import process_single_image
 
-def graceful_shutdown(signum=None, frame=None):
-    # This function now handles BOTH manual calls and OS signals
-    print("\n🧹 Cleaning up and stopping Watcher...", flush=True)
-    # Observer cleanup logic goes here
-    print("💤 Watcher stopped safely.", flush=True)
-    sys.exit(0)
+VALID_EXTENSIONS = (".jpg", ".png", ".jpeg")
 
-# Register the signals explicitly
-# SIGINT = Ctrl+C
-# SIGTERM = Docker Stop
-signal.signal(signal.SIGINT, graceful_shutdown)
-signal.signal(signal.SIGTERM, graceful_shutdown)
 
-print("🚀 Watcher Service Started. Waiting...", flush=True)
+class ImageWatcher(FileSystemEventHandler):
 
-try:
-    while True:
-        time.sleep(1)
-except Exception as e:
-    print(f"❌ Unexpected Error: {e}", flush=True)
-    sys.exit(1)
+    def __init__(self, output_dir):
+        self.output_dir = output_dir
+
+    def is_valid(self, path):
+        return path.lower().endswith(VALID_EXTENSIONS)
+
+    def on_created(self, event):
+        print(f"[CREATED] {event.src_path}")
+
+        if event.is_directory:
+            return
+
+        if self.is_valid(event.src_path):
+            print("→ Valid image detected (created)")
+            process_single_image(event.src_path, self.output_dir)
+
+    def on_moved(self, event):
+        print(f"[MOVED] {event.dest_path}")
+
+        if event.is_directory:
+            return
+
+        if self.is_valid(event.dest_path):
+            print("→ Valid image detected (moved)")
+            process_single_image(event.dest_path, self.output_dir)
+
+
+if __name__ == "__main__":
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    input_dir = os.path.join(base_dir, "..", "input")
+    output_dir = os.path.join(base_dir, "..", "output")
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    event_handler = ImageWatcher(output_dir)
+    observer = Observer()
+    observer.schedule(event_handler, input_dir, recursive=False)
+    observer.start()
+
+    print("👀 Watching input folder for images...")
+
+    try:
+        while True:
+            time.sleep(1)  # low CPU usage
+    except KeyboardInterrupt:
+        observer.stop()
+
+    observer.join()
