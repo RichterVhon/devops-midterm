@@ -11,6 +11,9 @@ class ImageWatcher(FileSystemEventHandler):
 
     def __init__(self, output_dir):
         self.output_dir = output_dir
+        os.makedirs(os.path.join(output_dir, "processed"), exist_ok=True)
+        os.makedirs(os.path.join(output_dir, "paint"), exist_ok=True)
+        os.makedirs(os.path.join(output_dir, ".debug_masks"), exist_ok=True)
 
     def is_valid(self, path):
         return path.lower().endswith(VALID_EXTENSIONS)
@@ -35,13 +38,22 @@ class ImageWatcher(FileSystemEventHandler):
             print("→ Valid image detected (moved)")
             process_single_image(event.dest_path, self.output_dir)
 
-
+def graceful_shutdown(signum, frame):
+    print("\n🧹 Cleaning up and stopping Watcher...", flush=True)
+    observer.stop()
+    observer.join()
+    print("💤 Watcher stopped safely.", flush=True)
+    sys.exit(0)
+    
 if __name__ == "__main__":
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = os.path.dirname(os.path.abspath(__file__))
     input_dir = os.path.join(base_dir, "..", "input")
     output_dir = os.path.join(base_dir, "..", "output")
 
     os.makedirs(output_dir, exist_ok=True)
+    
+    signal.signal(signal.SIGINT, graceful_shutdown)
+    signal.signal(signal.SIGTERM, graceful_shutdown)
 
     event_handler = ImageWatcher(output_dir)
     observer = Observer()
