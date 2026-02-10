@@ -129,8 +129,6 @@ A modular hierarchy designed for scalability, clear separation of concerns, and 
 
 ---
 
----
-
 ### 📸 Visual Gallery & File Proof (**Saige**)
 **Visual Lead:** saige | **Asset Path:** [`docs/screenshots/`](docs/screenshots/)
 > **Documenter Source:** *Tester's PR screenshots and Local File System logs*
