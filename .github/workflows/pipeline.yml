@@ -66,12 +66,17 @@ jobs:
         # 3. VERIFICATION & TEST EXECUTION
         # Wait for service to initialize
         sleep 5
+
+        # NEW: Print the logs directly so you can see the error in GitHub Actions
+        echo "--- RAW CONTAINER LOGS ---"
+        docker logs test-container
+        echo "--- END LOGS ---"
         
         # Check if the "Verbose Logging" you requested is actually working
         docker logs test-container | grep "Watcher Service Started"
         
         # Run the processor and pytest inside the ALREADY running container
-        docker exec test-container sh -c "python src/processor.py && pytest --html=report.html --self-contained-html"
+        docker exec test-container pytest --html=report.html --self-contained-html
         
         # 4. EXPORT RESULTS & CLEANUP
         # Copy the report out before killing the container

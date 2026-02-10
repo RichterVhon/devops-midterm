@@ -85,12 +85,15 @@ The core engine utilizes **OpenCV (cv2)** following this logic:
 3. **Export**: Saves the processed array to the `/output` folder with timestamped filenames.
 
 ### 🧪 Quality Assurance (Automated Testing) (**Saige**; include file path and specific files, katulad nung ginawa ko sa devops & observability workflow)
-
-> **Documenter Source:** *PyTest terminal logs and Actions history.*
+**Testing:** Ralph (saige) | **Test Directory** [`tests/`](tests/)
+> **Documenter Source:** *PyTest terminal logs and GitHub Actions history*
 
 The system ensures reliability through **PyTest**. Automated tests verify:
 
-* **Detection**: Correct identification of image files in the input folder.
+* **Detection**: Correct identification of image files in the input folder
+    **File location**: tests/test_processor.py
+    
+
 * **Integrity**: Dimensional consistency between original and processed images.
 * **I/O Success**: Verified permission to write processed files to the output directory.
 

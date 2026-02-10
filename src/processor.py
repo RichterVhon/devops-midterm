@@ -1,91 +1,111 @@
 import cv2
 import os
 import sys
+import time
+import sentry_sdk
 
 # Ensures Python treats the 'src' directory as the root for imports
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.append(current_dir)
 
-# [x] Task: Import extract_edges and apply_paint_effect
+
 from filters.edges import extract_edges
 from filters.colors import apply_paint_effect
 
-import os
-import sentry_sdk
 
-# 1. Capture the environment variable from the system
-# We default to 'local' so your dashboard stays clean if you run it on your PC
-current_env = os.getenv("APP_ENV", "local")
+# -----------------------------
+# ENVIRONMENT / SENTRY SETUP
+# -----------------------------
+if os.getenv("GITHUB_ACTIONS"):
+    env = "ci"
+elif os.getenv("APP_ENV") == "production":
+    env = "production"
+else:
+    env = "local"
 
-# 2. Initialize Sentry
-# We remove the 'if' guard for the environment so we can actually see 
-# the 'local' or 'ci' tags show up on the dashboard for testing.
-if os.getenv("SENTRY_DSN"):
+if env in ["ci", "production"] and os.getenv("SENTRY_DSN"):
     sentry_sdk.init(
         dsn=os.getenv("SENTRY_DSN"),
-        environment=current_env, # This is what creates the dropdown in Sentry
-        release=os.getenv("GITHUB_SHA", "v1.0.0"), # Best practice for Milestone 4
-        traces_sample_rate=1.0,
-        send_default_pii=True
+        environment=env,
+        traces_sample_rate=1.0
     )
-    print(f"Sentry initialized in [{current_env}] mode.")
 
-def process_images(input_dir=None, output_dir=None): 
-    #division_by_zero = 1 / 0  # This will trigger an error to test Sentry integration
-    # Define paths relative to this script
-# Define default folders if none are provided
-    if input_dir is None or output_dir is None:
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        input_dir = os.path.join(script_dir, '..', 'input')
-        output_dir = os.path.join(script_dir, '..', 'output')
+
+# -----------------------------
+# SINGLE IMAGE PIPELINE
+# -----------------------------
+def process_single_image(input_path, output_dir):
+    """
+    Processes ONE image safely.
+    Used by watcher and batch mode.
+    """
+
+    filename = os.path.basename(input_path)
+    base_name, ext = os.path.splitext(filename)
+
+    # Output folders
+    paint_dir = os.path.join(output_dir, "paint")
+    processed_dir = os.path.join(output_dir, "processed")
+    mask_debug_dir = os.path.join(output_dir, ".debug_masks")  # edges go here
+
+    for d in [paint_dir, processed_dir, mask_debug_dir]:
+        os.makedirs(d, exist_ok=True)
+
+    # Retry logic (file may still be copying)
+    img = None
+    for _ in range(5):
+        img = cv2.imread(input_path)
+        if img is not None:
+            break
+        time.sleep(0.2)
+
+    if img is None:
+        print(f"❌ Failed to read image: {filename}")
+        return
+
+    # 1. Edge mask
+    ink_mask = extract_edges(img)
+
+    # Save debug mask / edges
+    cv2.imwrite(
+        os.path.join(mask_debug_dir, f"mask_{base_name}.png"),  # mask
+        ink_mask
+    )
+    cv2.imwrite(
+        os.path.join(mask_debug_dir, f"edges_{base_name}.png"),  # visible edges
+        ink_mask
+    )
+
+    # 2. Paint effect
+    painted_canvas = apply_paint_effect(img, k=8)
+    cv2.imwrite(
+        os.path.join(paint_dir, f"paint_{base_name}{ext}"),
+        painted_canvas
+    )
+
+    # 3. Combine
+    final_cartoon = cv2.bitwise_and(
+        painted_canvas, painted_canvas, mask=ink_mask
+    )
+
+    # 4. Final output
+    cv2.imwrite(
+        os.path.join(processed_dir, f"processed_{base_name}{ext}"),
+        final_cartoon
+    )
+
+def process_images(input_dir="input", output_dir="output"):
+    """
+    Batch process all images in the input folder using process_single_image.
+    """
+    if not os.path.exists(input_dir):
+        print(f"Input directory {input_dir} does not exist!")
+        return
 
     os.makedirs(output_dir, exist_ok=True)
-    mask_debug_dir = os.path.join(output_dir, ".debug_masks")
-    os.makedirs(mask_debug_dir, exist_ok=True)
-
-    
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    valid_extensions = ('.jpg', '.jpeg', '.png')
 
     for filename in os.listdir(input_dir):
-        if filename.lower().endswith(valid_extensions):
+        if filename.lower().endswith((".png", ".jpg", ".jpeg")):
             input_path = os.path.join(input_dir, filename)
-            
-            # [x] Task: Ensure the final image is saved with the processed_ prefix
-            output_filename = f"processed_{filename}"
-            output_path = os.path.join(output_dir, output_filename)
-
-            img = cv2.imread(input_path)
-
-            if img is not None:
-
-                # 1. Edge mask
-                ink_mask = extract_edges(img)
-
-                base_name, ext = os.path.splitext(filename)
-
-                # REQUIRED by tests (do NOT remove)
-                mask_path = os.path.join(mask_debug_dir, f"mask_{base_name}.png")
-                cv2.imwrite(mask_path, ink_mask)
-
-                # 2. Paint effect
-                painted_canvas = apply_paint_effect(img, k=8)
-
-                # 3. Combine
-                final_cartoon = cv2.bitwise_and(painted_canvas, painted_canvas, mask=ink_mask)
-
-                # 4. Final output (the one you actually care about)
-                output_filename = f"processed_{base_name}{ext}"
-                output_path = os.path.join(output_dir, output_filename)
-                cv2.imwrite(output_path, final_cartoon)
-
-                print(f"Processed: {filename} -> {output_filename}")
-
-            else:
-                print(f"Warning: Could not read {filename}. Skipping.")
-
-if __name__ == "__main__":
-    process_images()
+            process_single_image(input_path, output_dir)

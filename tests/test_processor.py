@@ -3,11 +3,13 @@ import shutil
 import cv2
 import numpy as np
 import pytest
+import time
 from src.processor import process_images as run_processor
 from src.processor import process_images
 
 # Import validator from test_edges
 from tests.test_edges import validate_ink_edges
+from tests.test_colors import palette_gate, bilateral_gate
 
 
 TEST_IMAGES = ["test1.png", "test2.png", "test3.png"]
@@ -20,8 +22,11 @@ def test_full_cartoon_pipeline(image_name):
     
     base_name, _ = os.path.splitext(image_name)
     output_dir = "output"
-    output_path = os.path.join(output_dir, f"processed_{base_name}.png")
-    mask_path = os.path.join(output_dir, ".debug_masks", f"mask_{base_name}.png")  # Binary mask for validation
+    processed_dir = os.path.join(output_dir, "processed")
+    output_path = os.path.join(processed_dir, f"processed_{base_name}.png")
+
+    mask_path = os.path.join(output_dir, ".debug_masks", f"mask_{base_name}.png")
+    # Binary mask for validation
 
     os.makedirs("input", exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
@@ -34,7 +39,16 @@ def test_full_cartoon_pipeline(image_name):
 
     try:
         # --- 2. EXECUTION ---
-        run_processor()
+        timeout = 30  # Seconds
+        start_time = time.time()
+        while not os.path.exists(output_path):
+            if time.time() - start_time > timeout:
+                existing_files = os.listdir(processed_dir) if os.path.exists(processed_dir) else "Dir not found"
+                pytest.fail(f"Watcher timed out! Expected {output_path}. Found: {existing_files}")
+            time.sleep(1) # This must be aligned with the 'if' statement
+
+        # Give the file a moment to finish writing to disk (prevents CRC error)
+        time.sleep(2)
 
         # --- 3. ASSERTION: I/O GATE ---
         assert os.path.exists(output_path), f"I/O Failure: {output_path} not found!"
@@ -56,6 +70,14 @@ def test_full_cartoon_pipeline(image_name):
         mask_img = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
         assert mask_img is not None, f"Mask could not be read for {image_name}"
         validate_ink_edges(mask_img, image_name)
+        
+        # --- 7. VALIDATE PAINT EFFECT MILESTONE 2---
+        paint_path = os.path.join(output_dir, "paint", f"paint_{base_name}.png")
+        paint_img = cv2.imread(paint_path)
+        assert paint_img is not None, f"Paint image not readable: {paint_path}"
+        
+        palette_gate(paint_img)
+        bilateral_gate(paint_img)
         
 
     finally:
@@ -89,7 +111,8 @@ def test_full_cartoon_pipeline_tmp(image_name, tmp_path):
     process_images(str(input_dir), str(output_dir))
 
     # 5. Check output file exists
-    output_file = output_dir / f"processed_{image_name}"
+    processed_dir = output_dir / "processed"
+    output_file = processed_dir / f"processed_{image_name}"
     assert output_file.exists(), "Processed file was not created!"
 
     # 6. Read the result image
@@ -124,5 +147,6 @@ def test_extreme_images(tmp_path):
     process_images(str(input_dir), str(output_dir))
 
     # check outputs exist
-    assert (output_dir / "processed_white.jpg").exists()
-    assert (output_dir / "processed_black.jpg").exists()
+    assert (output_dir / "processed" / "processed_white.jpg").exists()
+    assert (output_dir / "processed" / "processed_black.jpg").exists()
+

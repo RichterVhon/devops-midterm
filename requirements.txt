@@ -9,3 +9,5 @@ flake8==6.1.0
 
 # Post-Deployment
 sentry-sdk==1.40.0
+
+watchdog
