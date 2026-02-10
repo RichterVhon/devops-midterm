@@ -83,13 +83,25 @@ The core engine utilizes **OpenCV (cv2)** following this logic:
 * **Edge Detection**: Uses the **Sobel Operator** to calculate intensity gradients, identifying object boundaries.
 3. **Export**: Saves the processed array to the `/output` folder with timestamped filenames.
 
-### 🧪 Quality Assurance (Automated Testing) (**Saige**; include file path and specific files, katulad nung ginawa ko sa devops & observability workflow)
+### 🧪 Quality Assurance (Automated Testing) (**Saige**:)
+**Testing:** Ralph (saige) | **Test Directory** [`tests/`](tests/)
+> **Documenter Source:** *PyTest terminal logs and GitHub Actions history*
 
-The system ensures reliability through **PyTest**. Automated tests verify:
+The system ensures reliability through PyTest. Automated tests verify the full lifecycle of an image from the `input/` folder to the final `output/` directory, ensuring no data is lost or corrupted during the transformation.
 
-* **Detection**: Correct identification of image files in the input folder.
-* **Integrity**: Dimensional consistency between original and processed images.
-* **I/O Success**: Verified permission to write processed files to the output directory.
+* **Detection & I/O Success**: 
+    * **File discovery**: Automatically verifies the correct identification and staging of image files from the `input/` folder.
+    * **Write Permissions**: Confirms the system’s ability to generate and write to the `output/processed/`, `.debug_masks/`, and `paint/` subdirectories.
+    * **File location**: `tests/test_processor.py`
+* **Integrity**:
+    * **Dimensional Accuracy**: Enforces a strict match between the original and processed images to prevent unintended resizing or aspect ratio distortion.
+    * **Corruption Gate**: Utilizes `cv2.imread()` validation to ensure processed files are readable and not corrupted during the "Cartoon Machine" execution.
+    * **File location**: `tests/test_processor.py`
+* **Filter Logic Validation**: 
+    * **Ink Gate (Edges)**: Verifies that the edge extraction produces a strict binary output `(0 or 255)` using `tests/test_edges.py.`
+    * **Palette Gate (Colors)**: Validates that `K-Means quantization` successfully reduces color complexity without losing image detail via `tests/test_colors.py`
+* **Resilience Testing**: 
+    * **Stress Testing**: Executes a "Crash-Test" using extreme inputs (100% black and 100% white images) to ensure the OpenCV compute engine remains stable under non-standard lighting conditions.
 
 ### 📂 Project Structure (**vhon, done**)
 
@@ -116,14 +128,15 @@ A modular hierarchy designed for scalability, clear separation of concerns, and 
 
 ---
 
-## 📸 Visual Gallery & File Proof (**saige**; upload only screenshots to docs/screenshots. compilation and formatting here in readme will be done by **kier**)
+### 📸 Visual Gallery & File Proof (**Saige**)
+**Visual Lead:** saige | **Asset Path:** [`docs/screenshots/`](docs/screenshots/)
+> **Documenter Source:** *Tester's PR screenshots and Local File System logs*
 
-> **Documenter Source:** *Tester's PR screenshots.*
+This gallery demonstrates the complete transformation from the `Original Input` to the `Final Cartoon` Result by verifying our `Ink Gate (edges)` and `Paint Effect (colors)` milestones. These side-by-side results prove that the system successfully processes images while maintaining perfect geometric consistency as required.
 
-### End-Product Results
+![Folder_Structure](./docs/screenshots/test1.png.jpg)
 
-* **Grayscale Transformation**: `![Grayscale_Final_REQ-02](path/to/image)`
-* **Edge Detection**: `![Edge_Final_REQ-02](path/to/image)`
+![Folder_Structure](./docs/screenshots/test_saige.png.jpg)
 
 ### File System Proof
 
