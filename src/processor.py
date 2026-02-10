@@ -72,11 +72,6 @@ def process_single_image(input_path, output_dir):
         os.path.join(mask_debug_dir, f"mask_{base_name}.png"),  # mask
         ink_mask
     )
-    cv2.imwrite(
-        os.path.join(mask_debug_dir, f"edges_{base_name}.png"),  # visible edges
-        ink_mask
-    )
-
     # 2. Paint effect
     painted_canvas = apply_paint_effect(img, k=8)
     cv2.imwrite(
