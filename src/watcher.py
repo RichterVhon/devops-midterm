@@ -50,6 +50,11 @@ class ImageWatcher(FileSystemEventHandler):
     def on_moved(self, event):
         if not event.is_directory:
             self.process_file(event.dest_path)
+    
+    # Add this to your ImageWatcher class in watcher.py
+    def on_modified(self, event):
+        if not event.is_directory:
+            self.process_file(event.src_path)
 
 def graceful_shutdown(signum, frame):
     print("\n🧹 Cleaning up and stopping Watcher...", flush=True)

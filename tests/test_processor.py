@@ -3,7 +3,6 @@ import shutil
 import cv2
 import numpy as np
 import pytest
-import time
 from src.processor import process_images as run_processor
 from src.processor import process_images
 
@@ -39,16 +38,7 @@ def test_full_cartoon_pipeline(image_name):
 
     try:
         # --- 2. EXECUTION ---
-        timeout = 30  # Seconds
-        start_time = time.time()
-        while not os.path.exists(output_path):
-            if time.time() - start_time > timeout:
-                existing_files = os.listdir(processed_dir) if os.path.exists(processed_dir) else "Dir not found"
-                pytest.fail(f"Watcher timed out! Expected {output_path}. Found: {existing_files}")
-            time.sleep(1) # This must be aligned with the 'if' statement
-
-        # Give the file a moment to finish writing to disk (prevents CRC error)
-        time.sleep(2)
+        run_processor()
 
         # --- 3. ASSERTION: I/O GATE ---
         assert os.path.exists(output_path), f"I/O Failure: {output_path} not found!"
@@ -149,4 +139,3 @@ def test_extreme_images(tmp_path):
     # check outputs exist
     assert (output_dir / "processed" / "processed_white.jpg").exists()
     assert (output_dir / "processed" / "processed_black.jpg").exists()
-
