@@ -24,6 +24,7 @@ def test_full_cartoon_pipeline(image_name):
     output_dir = "output"
     processed_dir = os.path.join(output_dir, "processed")
     output_path = os.path.join(processed_dir, f"processed_{base_name}.png")
+    paint_path = os.path.join(output_dir, "paint", f"paint_{base_name}.png")
 
     mask_path = os.path.join(output_dir, ".debug_masks", f"mask_{base_name}.png")
     # Binary mask for validation
@@ -48,6 +49,7 @@ def test_full_cartoon_pipeline(image_name):
         # --- 3. ASSERTION: I/O GATE ---
         assert os.path.exists(output_path), f"I/O Failure: {output_path} not found!"
         assert os.path.exists(mask_path), f"I/O Failure: {mask_path} not found!"
+        assert os.path.exists(paint_path), f"I/O Failure: {paint_path} not found!"
 
         original = cv2.imread(input_path)
         processed_cartoon = cv2.imread(output_path)
@@ -83,6 +85,8 @@ def test_full_cartoon_pipeline(image_name):
             os.remove(output_path)
         if os.path.exists(mask_path):
             os.remove(mask_path)
+        if os.path.exists(paint_path):
+            os.remove(paint_path)
 
 @pytest.mark.parametrize("image_name", TEST_IMAGES)
 def test_full_cartoon_pipeline_tmp(image_name, tmp_path):
