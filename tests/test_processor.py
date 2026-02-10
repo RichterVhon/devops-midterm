@@ -39,18 +39,16 @@ def test_full_cartoon_pipeline(image_name):
 
     try:
         # --- 2. EXECUTION ---
-        #run_processor() # this already runs in watcher, so we just need to wait for it to process the file
-        
         timeout = 30  # Seconds
         start_time = time.time()
         while not os.path.exists(output_path):
-          if time.time() - start_time > timeout:
+            if time.time() - start_time > timeout:
                 existing_files = os.listdir(processed_dir) if os.path.exists(processed_dir) else "Dir not found"
                 pytest.fail(f"Watcher timed out! Expected {output_path}. Found: {existing_files}")
-            time.sleep(1)
+            time.sleep(1) # This must be aligned with the 'if' statement
 
-        # Give the file another half-second to finish writing to disk (prevents CRC error)
-        time.sleep(25)
+        # Give the file a moment to finish writing to disk (prevents CRC error)
+        time.sleep(2)
 
         # --- 3. ASSERTION: I/O GATE ---
         assert os.path.exists(output_path), f"I/O Failure: {output_path} not found!"
