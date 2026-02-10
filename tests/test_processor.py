@@ -3,6 +3,7 @@ import shutil
 import cv2
 import numpy as np
 import pytest
+import time
 from src.processor import process_images as run_processor
 from src.processor import process_images
 
@@ -39,6 +40,10 @@ def test_full_cartoon_pipeline(image_name):
     try:
         # --- 2. EXECUTION ---
         run_processor()
+        
+        # NEW: Give the OS a moment to finish writing the files to disk
+        # This prevents the 'libpng Read Error'
+        time.sleep(2)
 
         # --- 3. ASSERTION: I/O GATE ---
         assert os.path.exists(output_path), f"I/O Failure: {output_path} not found!"
