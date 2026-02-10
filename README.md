@@ -14,10 +14,10 @@ This project is an automated batch image processing system. It is designed to mo
 
 | ID | System Requirement | Status | Verification (Link) |
 | --- | --- | --- | --- |
-| **REQ-01** | Auto-detect images in input directory | ✅ DONE | [Link to Milestone link and Key PR #] |
-| **REQ-02** | Apply 2+ OpenCV techniques | ✅ DONE | [Link to Milestone link and Key PR #, more than 1] |
-| **REQ-03** | Save to output directory | ✅ DONE | [Link to PR #] |
-| **REQ-04** | GitHub Actions Pipeline (Run on Push) | ✅ DONE | [Key PRs, more than 3 or 5] |
+| **REQ-01** | Auto-detect images in input directory | ✅ DONE | [Issue #47](https://github.com/RichterVhon/devops-midterm/issues/47) [PR #17](https://github.com/RichterVhon/devops-midterm/pull/17) |
+| **REQ-02** | Apply 2+ OpenCV techniques | ✅ DONE | [PR #24 – Edge Detection](https://github.com/RichterVhon/devops-midterm/pull/24) [PR #28 – Color Quantization](https://github.com/RichterVhon/devops-midterm/pull/28) |
+| **REQ-03** | Save to output directory | ✅ DONE | [PR #22 – Output Handling](https://github.com/RichterVhon/devops-midterm/pull/22) |
+| **REQ-04** | GitHub Actions Pipeline (Run on Push) | ✅ DONE | [PR #16](https://github.com/RichterVhon/devops-midterm/pull/16) + [PR #18](https://github.com/RichterVhon/devops-midterm/pull/18) + [PR #30](https://github.com/RichterVhon/devops-midterm/pull/30) + [PR #11](https://github.com/RichterVhon/devops-midterm/pull/11) |
 
 ---
 
