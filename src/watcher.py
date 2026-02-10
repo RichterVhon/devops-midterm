@@ -2,7 +2,7 @@ import os
 import time
 import signal
 import sys
-from watchdog.observers import Observer
+from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import FileSystemEventHandler
 from processor import process_single_image
 
