@@ -3,6 +3,7 @@ import shutil
 import cv2
 import numpy as np
 import pytest
+import time
 from src.processor import process_images as run_processor
 from src.processor import process_images
 
