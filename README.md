@@ -33,25 +33,71 @@ This project is an automated batch image processing system. It is designed to mo
 
 ---
 
-## 🚀 Getting Started (**vhon, last to update once tapos na fully project**)
+# 🚀 Cartoonizer Service: Quick Start Guide
 
-### 👤 For Users (Quick Run)
+This guide provides the instructions to run the Image Watcher service. The service automatically detects images in a folder and applies a cartoon "ink and paint" effect using a Dockerized environment.
 
-1. **Install Docker Desktop.**
-2. **Run via Command Terminal:**
-```bash
-docker run -v "%cd%":/app/data [image-name]
+---
 
+## 👤 For Users
+
+> [!IMPORTANT]
+> **Prerequisites:**
+> 1. **Docker Desktop** must be installed and actively running.
+> 2. **Folder Setup:** Create a folder named `pets` and a folder named `processed_pets` in your current directory before starting.
+
+### 1. Pull the Image
+```cmd
+docker pull ghcr.io/richtervhon/devops-midterm:latest
+```
+### 2. Run the Service
+
+Paste one of these one-line commands into your Windows Command Prompt (CMD).
+
+**Option A: With Sentry Monitoring (Production mode)**
+```cmd
+docker run -it --rm -e SENTRY_DSN=<your_sentry_dsn> -e APP_ENV="production" -v "%cd%\your_output_folder":/app/input -v "%cd%\your_input_folder":/app/output ghcr.io/richtervhon/devops-midterm:latest
 ```
 
+**Option B: With Sentry Monitoring (Production mode)**
+```cmd
+docker run -it --rm -e APP_ENV="local" -v "%cd%\your_input_folder":/app/input -v "%cd%\your_output_folder":/app/output ghcr.io/richtervhon/devops-midterm:latest
+```
+### 📝 Operational Notes
+
+* **Stopping the Service:** To stop the watcher and exit the container, press **Ctrl + C**.
+* **Pathing (%cd%):** The `%cd%` variable maps your current directory to the container. If you are using **PowerShell**, replace `%cd%` with `${PWD}`.
+* **Polling Mode:** The service scans for new files every 1 second to ensure the Windows-to-Linux volume mount detects changes immediately.
 
 *This maps your current directory to the container to see results locally.*
 
 ### 💻 For Developers (Setup Environment)
 
-1. **Clone the Repository:** `git clone [url]`
-2. **Install Dependencies:** `pip install opencv-python pytest`
-3. **Run Local Tests:** Execute `pytest` to verify the logic before pushing.
+1. **Clone the Repository:** 
+```bash
+git clone https://github.com/RichterVhon/devops-midterm
+cd devops-midterm
+```
+2. **Setup Virtual Environment: It is recommended to use a virtual environment to manage dependencies:** 
+```bash
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+3. **Install Dependencies: Install the core processing libraries and testing tools:**
+```bash
+pip install -r requirements.txt
+pip install pytest
+```
+
+4. **Run the Watcher Service: To test the file monitoring logic locally without Docker, run:**
+```bash
+python src/watcher.py
+```
+5. **Execute Tests: Run the test suite to verify the cartoonization gates and edge detection logic:**
+```bash
+pytest
+```
 
 ---
 
