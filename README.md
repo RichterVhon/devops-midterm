@@ -14,10 +14,10 @@ This project is an automated batch image processing system. It is designed to mo
 
 | ID | System Requirement | Status | Verification (Link) |
 | --- | --- | --- | --- |
-| **REQ-01** | Auto-detect images in input directory | ✅ DONE | [Issue #47](https://github.com/RichterVhon/devops-midterm/issues/47) [PR #17](https://github.com/RichterVhon/devops-midterm/pull/17) |
-| **REQ-02** | Apply 2+ OpenCV techniques | ✅ DONE | [PR #24 – Edge Detection](https://github.com/RichterVhon/devops-midterm/pull/24) [PR #28 – Color Quantization](https://github.com/RichterVhon/devops-midterm/pull/28) |
-| **REQ-03** | Save to output directory | ✅ DONE | [PR #22 – Output Handling](https://github.com/RichterVhon/devops-midterm/pull/22) |
-| **REQ-04** | GitHub Actions Pipeline (Run on Push) | ✅ DONE | [PR #16](https://github.com/RichterVhon/devops-midterm/pull/16) + [PR #18](https://github.com/RichterVhon/devops-midterm/pull/18) + [PR #30](https://github.com/RichterVhon/devops-midterm/pull/30) + [PR #11](https://github.com/RichterVhon/devops-midterm/pull/11) |
+| **REQ-01** | Auto-detect images in input directory | ✅ DONE | [Milestone 1](https://github.com/RichterVhon/devops-midterm/milestone/1) – [Issue #2](https://github.com/RichterVhon/devops-midterm/issues/2) |
+| **REQ-02** | Apply 2+ OpenCV techniques | ✅ DONE | [Milestone 2](https://github.com/RichterVhon/devops-midterm/milestone/2) – [Issue #19](https://github.com/RichterVhon/devops-midterm/issues/19), [Issue #20](https://github.com/RichterVhon/devops-midterm/issues/20) <br> [Milestone 3](https://github.com/RichterVhon/devops-midterm/milestone/3) – [Issue #25](https://github.com/RichterVhon/devops-midterm/issues/25), [Issue #26](https://github.com/RichterVhon/devops-midterm/issues/26) |
+| **REQ-03** | Save to output directory | ✅ DONE | [Milestone 1](https://github.com/RichterVhon/devops-midterm/milestone/1) – [#21](https://github.com/RichterVhon/devops-midterm/issues/21) |
+| **REQ-04** | GitHub Actions Pipeline (Run on Push) | ✅ DONE | [Milestone 4](https://github.com/RichterVhon/devops-midterm/milestone/4) – [#35](https://github.com/RichterVhon/devops-midterm/issues/35), [#40](https://github.com/RichterVhon/devops-midterm/issues/40), [#64](https://github.com/RichterVhon/devops-midterm/issues/64) |
 
 ---
 
