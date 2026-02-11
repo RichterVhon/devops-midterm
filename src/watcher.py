@@ -5,6 +5,7 @@ import sys
 from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import FileSystemEventHandler
 from processor import process_single_image
+import sentry_sdk
 
 VALID_EXTENSIONS = (".jpg", ".png", ".jpeg")
 
@@ -58,36 +59,56 @@ def graceful_shutdown(signum, frame):
     sys.exit(0)
     
 if __name__ == "__main__":
-    # Standardizing paths
-    input_dir = "input"
-    output_dir = "output"
+    # --- 1. Standardizing Paths using Absolute Paths ---
+    # os.getcwd() ensures that in Docker, we are at /app
+    # In VS Code, it ensures we are in your project root
+    base_path = os.getcwd() 
+    input_dir = os.path.join(base_path, "input")
+    output_dir = os.path.join(base_path, "output")
 
+    # Ensure directories exist before the scan
     os.makedirs(input_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
     
+    # Initialize the handler with the absolute output path
     event_handler = ImageWatcher(output_dir)
     observer = Observer()
     
-    # Handle OS signals
+    # --- 2. Handle OS Signals for Clean Shutdown ---
     if os.name != 'nt': # Linux/Docker
         signal.signal(signal.SIGTERM, graceful_shutdown)
     signal.signal(signal.SIGINT, graceful_shutdown)
 
-    # --- 🚀 STARTUP SCAN (Process existing files) ---
+    # --- 3. 🚀 STARTUP SCAN (Process existing files) ---
+    # We use absolute paths here so the processor never gets confused
     print("🔍 Scanning for existing files...", flush=True)
-    for filename in os.listdir(input_dir):
-        full_path = os.path.join(input_dir, filename)
-        if os.path.isfile(full_path):
-            event_handler.process_file(full_path)
+    if os.path.exists(input_dir):
+        for filename in os.listdir(input_dir):
+            full_path = os.path.join(input_dir, filename)
+            # Ignore hidden files (like .gitignore) and debug folders
+            if os.path.isfile(full_path) and not filename.startswith('.'):
+                event_handler.process_file(full_path)
 
+    # --- 4. START WATCHER ---
     observer.schedule(event_handler, input_dir, recursive=False)
     observer.start()
 
-    print("🚀 Watcher Service Started. Waiting for NEW images...", flush=True)
+# --- 📢 USER INSTRUCTIONS ---
+    print("\n" + "="*50)
+    print("🚀 Watcher Service is LIVE.")
+    print(f"📍 Input:  {input_dir}")
+    print(f"📦 Output: {output_dir}")
+    print("\n💡 Press Ctrl+C to stop the service and exit.")
+    print("="*50 + "\n", flush=True)
 
     try:
         while True:
             time.sleep(1)
-    except Exception:
+    except (KeyboardInterrupt, SystemExit):
+        print("\nStopping observer...")
         observer.stop()
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        observer.stop()
+        
     observer.join()
