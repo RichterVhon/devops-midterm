@@ -73,7 +73,7 @@ jobs:
         echo "--- END LOGS ---"
         
         # Check if the "Verbose Logging" you requested is actually working
-        docker logs test-container | grep "Watcher Service Started"
+        docker logs test-container | grep "Watcher Service is LIVE"
         
         # Run the processor and pytest inside the ALREADY running container
         docker exec test-container pytest --html=report.html --self-contained-html
