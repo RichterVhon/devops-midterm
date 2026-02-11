@@ -144,6 +144,7 @@ The system ensures reliability through PyTest. Automated tests verify the full l
     * **Corruption Gate**: Utilizes `cv2.imread()` validation to ensure processed files are readable and not corrupted during the "Cartoon Machine" execution.
     * **File location**: `tests/test_processor.py`
 * **Filter Logic Validation**: 
+    * **Consolidated Pipeline Proof:**: Both `Ink Gate (Edges)` and `Palette Gate (Colors)` logic have been integrated into `tests/test_processor.py` to ensure unified validation of the cartoon effect.
     * **Ink Gate (Edges)**: Verifies that the edge extraction produces a strict binary output `(0 or 255)` using `tests/test_edges.py.`
     * **Palette Gate (Colors)**: Validates that `K-Means quantization` successfully reduces color complexity without losing image detail via `tests/test_colors.py`
 * **Resilience Testing**: 
