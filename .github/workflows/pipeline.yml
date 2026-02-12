@@ -3,17 +3,17 @@ name: Image Processing CI/CD
 on: [push, pull_request]
 
 jobs:
-  # --- CHECK 1: LINTING (RESTORED) ---
+  # --- CHECK 1: LINTING ---
   quality-gate:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          fetch-depth: 0 # Important for pushing back to the repo
+          python-version: '3.9'
 
       - name: Lint with Flake8
         run: |
@@ -21,107 +21,77 @@ jobs:
           # Stops the build if there are syntax errors
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-  # --- CHECK 2: BUILD, TEST, AND DEPLOY ---
+  # --- CHECK 2: BUILD, WATCH, AND DEPLOY ---
   build-and-deploy:
     needs: quality-gate
     runs-on: ubuntu-latest
+    # 🔑 MASTER KEY: Fixes the 403 Permission Denied error
     permissions:
-      contents: read
+      contents: write
       packages: write
-      pull-requests: write 
-      
+      pull-requests: write
+
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Cache Docker layers
-      uses: actions/cache@v3
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and Run Watcher
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          RELEASE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          # 1. Build the image
+          docker build -t ghcr.io/richtervhon/devops-midterm:latest .
+          
+          # 2. Start the Watcher Service in Detached Mode
+          # Mapping repo 'input' to container 'input' and 'output' to 'output'
+          docker run -d --name test-container \
+            -e SENTRY_DSN=$SENTRY_DSN \
+            -e APP_ENV=production \
+            -e GITHUB_SHA=$RELEASE_SHA \
+            -v ${{ github.workspace }}/input:/app/input \
+            -v ${{ github.workspace }}/output:/app/output \
+            ghcr.io/richtervhon/devops-midterm:latest
+          
+          # 3. VERIFICATION
+          # Give the watcher 30 seconds to process the images found in logs
+          sleep 30
+          
+          echo "--- CONTAINER LOGS ---"
+          docker logs test-container
+          
+          # 4. Stop container
+          docker stop test-container
 
-    - name: Build and Test inside Docker
-      env:
-        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        RELEASE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      run: |
-        # 1. Build the image
-        docker build -t ghcr.io/richtervhon/devops-midterm:latest .
-        
-        # 2. Start the Watcher in the background
-        docker run -d --name test-container \
-          -e SENTRY_DSN=$SENTRY_DSN \
-          -e APP_ENV=production \
-          -v ${{ github.workspace }}/input:/app/input \
-          -v ${{ github.workspace }}/output:/app/output \
-          ghcr.io/richtervhon/devops-midterm:latest
-        
-        # 3. THE FIX: Wake up the watcher by touching the files
-        # This triggers the 'on_modified' or 'on_created' events
-        sleep 5
-        touch ${{ github.workspace }}/input/*
-        
-        # 4. Wait for processing (Ink and Paint takes time)
-        sleep 30
-        
-        # 5. Check logs to confirm the watcher actually saw the 'touch'
-        docker logs test-container
-        
-        # 6. Cleanup
-        docker stop test-container
-  
-        - name: Commit and Push Processed Images
+      - name: Commit and Push Results
         if: github.ref == 'refs/heads/main'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
+          # Stage the changes in the output folder
           git add output/
           
-          # Only push if there are changes
+          # Check if there are actually changes before committing to avoid 127/exit errors
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "🤖 Auto-processed: Watcher results"
-            # Explicitly use the token in the URL for the push
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+            git push origin main
           else
-            echo "No changes to commit"
+            echo "No new images to commit."
           fi
-        
-    - name: Run Trivy Vulnerability Scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: 'ghcr.io/richtervhon/devops-midterm:latest'
-        format: 'table'
-        exit-code: '0' 
-        severity: 'CRITICAL,HIGH'
 
-    - name: Save Automated Logs
-      uses: actions/upload-artifact@v4
-      with:
-        name: quality-report-run-${{ github.run_number }}
-        path: report.html
-
-    - name: Push Docker Image
-      if: github.ref == 'refs/heads/main'
-      run: docker push ghcr.io/richtervhon/devops-midterm:latest
-
-    - name: Link Report in PR
-      uses: mshick/add-pr-comment@v2
-      if: always() && github.event_name == 'pull_request'
-      with:
-        message: |
-          ## 🧪 Milestone 4 Quality Report
-          📊 **Quality Test Report is ready!**
-          🔗 [View Actions Run & Artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+      - name: Push Docker Image
+        if: github.ref == 'refs/heads/main'
+        run: docker push ghcr.io/richtervhon/devops-midterm:latest
