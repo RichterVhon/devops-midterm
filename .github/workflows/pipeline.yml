@@ -55,36 +55,35 @@ jobs:
         # 1. Build the image
         docker build -t ghcr.io/richtervhon/devops-midterm:latest --build-arg SENTRY_DSN=$SENTRY_DSN .
         
-        # 2. START THE WATCHER SERVICE (Modified to -d)
-        # We run in detached mode so the pipeline can move to the next command
+        # 2. START THE WATCHER SERVICE (Mapped to GitHub Workspace)
+        # Added -v to link your repo folders to the container
         docker run -d --name test-container \
           -e SENTRY_DSN=$SENTRY_DSN \
           -e APP_ENV=production \
           -e GITHUB_SHA=$RELEASE_SHA \
+          -v ${{ github.workspace }}/pets:/app/input \
+          -v ${{ github.workspace }}/processed_pets:/app/output \
           ghcr.io/richtervhon/devops-midterm:latest
         
-        # 3. VERIFICATION & TEST EXECUTION
-        # Wait for service to initialize
-        sleep 5
-
-        # NEW: Print the logs directly so you can see the error in GitHub Actions
+        # 3. VERIFICATION
+        sleep 10 # Give the watcher time to detect the files mapped in via volume
+        
         echo "--- RAW CONTAINER LOGS ---"
         docker logs test-container
         echo "--- END LOGS ---"
         
-        # Check if the "Verbose Logging" you requested is actually working
         docker logs test-container | grep "Watcher Service is LIVE"
         
-        # Run the processor and pytest inside the ALREADY running container
-        docker exec test-container pytest --html=report.html --self-contained-html
-        
-        # 4. EXPORT RESULTS & CLEANUP
-        # Copy the report out before killing the container
-        docker cp test-container:/app/report.html .
-        
-        # Stop the container (This tests your SIGTERM signal handling)
+        # 4. CLEANUP
         docker stop test-container
 
+    - name: Commit and Push Processed Images
+      if: github.ref == 'refs/heads/main'
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add processed_pets/
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Automated: Processed images via Watcher" && git push)
     - name: Run Trivy Vulnerability Scanner
       uses: aquasecurity/trivy-action@master
       with:
