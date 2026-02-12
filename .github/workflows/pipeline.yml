@@ -6,6 +6,9 @@ jobs:
   # --- CHECK 1: LINTING (RESTORED) ---
   quality-gate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -55,9 +58,7 @@ jobs:
         # 1. Build the image
         docker build -t ghcr.io/richtervhon/devops-midterm:latest .
         
-        # 2. RUN WITH GITHUB FOLDER NAMES
-        # Mapping repo 'input' to container 'input'
-        # Mapping repo 'output' to container 'output'
+        # 2. Start the Watcher in the background
         docker run -d --name test-container \
           -e SENTRY_DSN=$SENTRY_DSN \
           -e APP_ENV=production \
@@ -65,23 +66,41 @@ jobs:
           -v ${{ github.workspace }}/output:/app/output \
           ghcr.io/richtervhon/devops-midterm:latest
         
-        # 3. Wait for the Watcher to detect and process the files
-        sleep 20
+        # 3. THE FIX: Wake up the watcher by touching the files
+        # This triggers the 'on_modified' or 'on_created' events
+        sleep 5
+        touch ${{ github.workspace }}/input/*
         
-        # 4. Cleanup
+        # 4. Wait for processing (Ink and Paint takes time)
+        sleep 30
+        
+        # 5. Check logs to confirm the watcher actually saw the 'touch'
+        docker logs test-container
+        
+        # 6. Cleanup
         docker stop test-container
 
     - name: Commit and Push Processed Images
       if: github.ref == 'refs/heads/main'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Stage the 'output' folder specifically
+        # Ensure we are on the right branch and have the latest
+        git pull origin main
+        
         git add output/
         
-        # Push back to main
-        git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-processed images in GitHub environment" && git push)
+        # Check if there are changes before pushing
+        if [ -n "$(git status --porcelain)" ]; then
+          git commit -m "🤖 Auto-processed: Watcher results"
+          # Use the token in the URL to guarantee permission
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+        else
+          echo "No changes to commit"
+        fi
         
     - name: Run Trivy Vulnerability Scanner
       uses: aquasecurity/trivy-action@master
