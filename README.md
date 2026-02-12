@@ -14,10 +14,10 @@ This project is an automated batch image processing system. It is designed to mo
 
 | ID | System Requirement | Status | Verification (Link) |
 | --- | --- | --- | --- |
-| **REQ-01** | Auto-detect images in input directory | ✅ DONE | [Milestone 1](https://github.com/RichterVhon/devops-midterm/milestone/1) – [Issue #2](https://github.com/RichterVhon/devops-midterm/issues/2) |
-| **REQ-02** | Apply 2+ OpenCV techniques | ✅ DONE | [Milestone 2](https://github.com/RichterVhon/devops-midterm/milestone/2) – [Issue #19](https://github.com/RichterVhon/devops-midterm/issues/19), [Issue #20](https://github.com/RichterVhon/devops-midterm/issues/20) <br> [Milestone 3](https://github.com/RichterVhon/devops-midterm/milestone/3) – [Issue #25](https://github.com/RichterVhon/devops-midterm/issues/25), [Issue #26](https://github.com/RichterVhon/devops-midterm/issues/26) |
+| **REQ-01** | Auto-detect images in input directory | ✅ DONE | [Milestone 1](https://github.com/RichterVhon/devops-midterm/milestone/1) – [Issue #2](https://github.com/RichterVhon/devops-midterm/issues/2) <br> [Milestone 4](https://github.com/RichterVhon/devops-midterm/milestone/4) |
+| **REQ-02** | Apply 2+ OpenCV techniques | ✅ DONE | [Milestone 2](https://github.com/RichterVhon/devops-midterm/milestone/2) – [Issue #19](https://github.com/RichterVhon/devops-midterm/issues/19), [Issue #20](https://github.com/RichterVhon/devops-midterm/issues/20) <br> [Milestone 3](https://github.com/RichterVhon/devops-midterm/milestone/3) – [Issue #25](https://github.com/RichterVhon/devops-midterm/issues/25), [Issue #26](https://github.com/RichterVhon/devops-midterm/issues/26) <br> [Milestone 4](https://github.com/RichterVhon/devops-midterm/milestone/4) |
 | **REQ-03** | Save to output directory | ✅ DONE | [Milestone 1](https://github.com/RichterVhon/devops-midterm/milestone/1) – [#21](https://github.com/RichterVhon/devops-midterm/issues/21) |
-| **REQ-04** | GitHub Actions Pipeline (Run on Push) | ✅ DONE | [Milestone 4](https://github.com/RichterVhon/devops-midterm/milestone/4) – [#35](https://github.com/RichterVhon/devops-midterm/issues/35), [#40](https://github.com/RichterVhon/devops-midterm/issues/40), [#64](https://github.com/RichterVhon/devops-midterm/issues/64) |
+| **REQ-04** | GitHub Actions Pipeline (Run on Push) | ✅ DONE | [Milestone 1](https://github.com/RichterVhon/devops-midterm/milestone/1) [Milestone 4](https://github.com/RichterVhon/devops-midterm/milestone/4) – [#35](https://github.com/RichterVhon/devops-midterm/issues/35), [#40](https://github.com/RichterVhon/devops-midterm/issues/40), [#64](https://github.com/RichterVhon/devops-midterm/issues/64) |
 
 ---
 
